@@ -12,6 +12,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy project files and install python dependencies
@@ -24,7 +25,6 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 # Use wait-for-it to wait for the db to be ready
-RUN apt-get install -y curl
 RUN curl -o /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
