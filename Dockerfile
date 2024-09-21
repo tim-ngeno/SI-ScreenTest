@@ -23,5 +23,14 @@ RUN pip install -r requirements.txt
 # Expose port 8000
 EXPOSE 8000
 
-# Run the Django server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+# Use wait-for-it to wait for the db to be ready
+RUN apt-get install -y curl
+RUN curl -o /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+# Run the Django server after migrations and collectstatic
+CMD /wait-for-it.sh db:5432 -- \
+    python manage.py collectstatic --noinput && \
+    python manage.py makemigrations && \
+    python manage.py migrate && \
+    gunicorn --bind 0.0.0.0:8000 core.wsgi:application
