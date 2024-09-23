@@ -6,8 +6,7 @@ from .serializers import CustomerSerializer, OrderSerializer
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
-from rest_framework.response import Response
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from dotenv import load_dotenv
 
