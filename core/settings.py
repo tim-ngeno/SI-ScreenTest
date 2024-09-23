@@ -2,7 +2,7 @@ import dj_database_url
 from os import getenv, path
 from dotenv import load_dotenv
 from pathlib import Path
-
+from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = getenv("DJANGO_SECRET_KEY", get_random_secret_key)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "t")
