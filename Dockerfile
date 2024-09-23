@@ -30,7 +30,6 @@ RUN chmod +x /wait-for-it.sh
 
 # Run the Django server after migrations and collectstatic
 CMD /wait-for-it.sh db:5432 -- \
-    python manage.py makemigrations && \
     python manage.py migrate && \
     python manage.py collectstatic --noinput && \
     gunicorn --bind 0.0.0.0:8000 core.wsgi:application
