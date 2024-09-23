@@ -30,6 +30,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         self.send_sms_alert(order)
 
     def send_sms_alert(self, order):
+        phone_number = order.customer.phone_number
+
+        # Initialize AfricasTalking SMS gateway
         username = "sandbox"
         apikey = os.getenv("SMS_APIKEY")
 
@@ -37,7 +40,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         sms = africastalking.SMS
 
-        recipients = ["+254106526816"]
+        recipients = [phone_number]
         message = f"Hi, {order.customer.name}, you have successfully placed an order for {order.item} amounting to {order.amount}."
 
         try:
