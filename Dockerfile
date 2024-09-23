@@ -29,6 +29,7 @@ EXPOSE 8000
 # RUN chmod +x /wait-for-it.sh
 
 # Run the Django server after migrations and collectstatic
-CMD python manage.py migrate && \
+CMD python manage.py makemigrations && \
+    python manage.py migrate && \
     python manage.py collectstatic --noinput && \
     gunicorn --bind 0.0.0.0:8000 core.wsgi:application
