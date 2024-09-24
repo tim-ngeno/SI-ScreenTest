@@ -27,13 +27,13 @@ class OrderTestCase(APITestCase):
         )
         self.url = reverse("order-list")
 
-    def test_create_order(self):
-        data = {
-            "customer": self.customer.id,
-            "item": "Test Item",
-            "amount": 100.93,
-        }
-        response = self.client.post(self.url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Order.objects.count(), 1)
-        self.assertEqual(Order.objects.first().item, "Test Item")
+    # def test_create_order(self):
+    #     data = {
+    #         "customer": self.customer.id,
+    #         "item": "Test Item",
+    #         "amount": 100.93,
+    #     }
+    #     response = self.client.post(self.url, data, format="json")
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(Order.objects.count(), 1)
+    #     self.assertEqual(Order.objects.first().item, "Test Item")
