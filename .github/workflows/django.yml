@@ -51,10 +51,10 @@ jobs:
           sleep 5
         done
     - name: Set environment variables for Africa's Talking
-      run: |
-       echo "AFRICASTALKING_USERNAME=${{ secrets.SMS_USERNAME }}" >> $GITHUB_ENV
-       echo "AFRICASTALKING_APIKEY=${{ secrets.SMS_APIKEY }}" >> $GITHUB_ENV
-
+      env:
+        SMS_USERNAME: ${{ secrets.SMS_USERNAME  }}
+        SMS_APIKEY: ${{ secrets.SMS_APIKEY }}
+  
     - name: Create Test Database
       env:
         PGPASSWORD: ${{ secrets.DB_PASSWORD }}
