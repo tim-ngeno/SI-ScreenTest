@@ -50,12 +50,12 @@ jobs:
           echo "Waiting for PostgreSQL..."
           sleep 5
         done
-  
+
     - name: Create Test Database
       env:
         PGPASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
-        psql -h localhost -U ${{ secrets.DB_USER }} -p 5432 -c "CREATE DATABASE ${{ secrets.DB_NAME }};"
+        psql -h localhost -U ${{ secrets.DB_USER }} -d postgres -p 5432 -c "CREATE DATABASE ${{ secrets.DB_NAME }};"
 
     - name: Set environment variables
       run: |
