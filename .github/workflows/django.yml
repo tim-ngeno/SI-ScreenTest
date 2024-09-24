@@ -19,6 +19,10 @@ jobs:
     services:
       postgres:
         image: postgres:13
+        env:
+          POSTGRES_USER: ${{secrets.DB_USER}}
+          POSTGRES_PASSWORD: ${{secrets.DB_PASSWORD}}
+          POSTGRES_DB: mytestdb
         ports:
           - 5432:5432
         options: >-
@@ -46,6 +50,19 @@ jobs:
           echo "Waiting for PostgreSQL..."
           sleep 5
         done
+    - name: Set environment variables for Africa's Talking
+      env:
+        SMS_USERNAME: ${{ secrets.SMS_USERNAME  }}
+        SMS_APIKEY: ${{ secrets.SMS_APIKEY }}
+      run: |
+        echo "AFRICASTALKING_USERNAME=${SMS_USERNAME}" >> $GITHUB_ENV
+        echo "AFRICASTALKING_API_KEY=${SMS_APIKEY}" >> $GITHUB_ENV
+  
+    - name: Create Test Database
+      env:
+        PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      run: |
+        psql -h localhost -U ${{ secrets.DB_USER }} -d postgres -p 5432 -c "CREATE DATABASE ${{ secrets.DB_NAME }};"
 
     - name: Set environment variables
       run: |
