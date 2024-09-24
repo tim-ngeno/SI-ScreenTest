@@ -55,7 +55,7 @@ jobs:
       env:
         PGPASSWORD: ${{ secrets.DB_NAME }}
       run: |
-        psql -h localhost -U postgres -p 5432 -c "CREATE DATABASE mytestdb;"
+        psql -h localhost -U ${{secrets.DB_USER}} -p 5432 -c "CREATE DATABASE ${{secrets.DB_NAME}};"
 
     - name: Set environment variables
       run: |
