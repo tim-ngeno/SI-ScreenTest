@@ -54,6 +54,9 @@ jobs:
       env:
         SMS_USERNAME: ${{ secrets.SMS_USERNAME  }}
         SMS_APIKEY: ${{ secrets.SMS_APIKEY }}
+      run: |
+        echo "AFRICASTALKING_USERNAME=${SMS_USERNAME}" >> $GITHUB_ENV
+        echo "AFRICASTALKING_API_KEY=${SMS_APIKEY}" >> $GITHUB_ENV
   
     - name: Create Test Database
       env:
