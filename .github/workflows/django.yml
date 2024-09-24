@@ -50,6 +50,10 @@ jobs:
           echo "Waiting for PostgreSQL..."
           sleep 5
         done
+    - name: Set environment variables for Africa's Talking
+      run: |
+       echo "AFRICASTALKING_USERNAME=${{ secrets.SMS_USERNAME }}" >> $GITHUB_ENV
+       echo "AFRICASTALKING_APIKEY=${{ secrets.SMS_APIKEY }}" >> $GITHUB_ENV
 
     - name: Create Test Database
       env:
