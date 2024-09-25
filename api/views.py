@@ -41,6 +41,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             order (Order): The order object for which the SMS is sent
         """
         phone_number = order.customer.phone_number
+        print(phone_number)
 
         # Initialize AfricasTalking SMS gateway
         username = "sandbox"
@@ -50,7 +51,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         sms = africastalking.SMS
 
-        recipients = [phone_number]
+        recipients = [f"+{phone_number}"]
         message = f"Hi, {order.customer.name}, you have successfully placed an order for {order.item} amounting to {order.amount}."
 
         try:
