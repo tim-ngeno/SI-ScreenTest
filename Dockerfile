@@ -24,10 +24,6 @@ RUN pip install -r requirements.txt
 # Expose port 8000
 EXPOSE 8000
 
-# Use wait-for-it to wait for the db to be ready
-# RUN curl -o /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-# RUN chmod +x /wait-for-it.sh
-
 # Run the Django server after migrations and collectstatic
 CMD python manage.py makemigrations && \
     python manage.py migrate && \
