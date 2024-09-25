@@ -29,7 +29,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_class = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """Creates a new order andn sends an SMS alert"""
+        """Creates a new order and sends an SMS alert"""
         order = serializer.save()
         self.send_sms_alert(order)
 
