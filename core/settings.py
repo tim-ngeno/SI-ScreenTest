@@ -46,6 +46,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.login_middleware.LoginRequiredMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
@@ -140,6 +141,16 @@ AUTHENTICATION_BACKENDS = (
     "core.backends.CustomOIDCAuthenticationBackend",
     "django.contrib.auth.backends.ModelBackend",
 )
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
 
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 60 * 60
 OIDC_STORE_ACCESS_TOKEN = getenv("OIDC_STORE_ACCESS_TOKEN", True)
