@@ -46,8 +46,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "core.login_middleware.LoginRequiredMiddleware",
+    "core.login_middleware.LoginRequiredMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://dev-86479100.okta.com",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -129,7 +135,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 OKTA_DOMAIN = getenv("OKTA_DOMAIN")
 OIDC_RP_CLIENT_ID = getenv("OIDC_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = getenv("OIDC_CLIENT_SECRET")
-OIDC_OP_AUTHORIZATION_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/authorize"
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/authorize?idp=0oak12umviiR3AqZD5d7&client=GOOGLE_CLIENT_ID&response_type=code&response_mode=query&"
 OIDC_OP_USER_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/userinfo"
 OIDC_OP_TOKEN_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/token"
 OIDC_OP_JWKS_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/keys"
