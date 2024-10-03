@@ -1,13 +1,7 @@
-from django.shortcuts import render
 import os
 import africastalking
 from .models import Customer, Order
 from .serializers import CustomerSerializer, OrderSerializer
-from django.conf import settings
-from django.contrib.auth import login
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
-from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from dotenv import load_dotenv
@@ -46,7 +40,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         print(phone_number)
 
         # Initialize AfricasTalking SMS gateway
-        username = "sandbox"
+        username = os.getenv("SMS_USERNAME")
         apikey = os.getenv("SMS_APIKEY")
 
         africastalking.initialize(username, apikey)
@@ -54,35 +48,14 @@ class OrderViewSet(viewsets.ModelViewSet):
         sms = africastalking.SMS
 
         recipients = [f"+{phone_number}"]
-        message = f"Hi, {order.customer.name}, you have successfully placed an order for {order.item} amounting to {order.amount}."
+        customer = order.customer.name.strip()
+        item = order.item.strip()
+        amount = order.amount
+        message = f"Hi, {customer}. You have successfully made an order for {item} amounting to Kshs. {amount}"
+        print(repr(message))
 
         try:
             res = sms.send(message, recipients)
             print(res)
         except Exception as e:
             print(f"Error sending SMS: {e}")
-
-
-# class CustomOIDCCallback(OIDCAuthenticationCallbackView):
-#     def get(self, request, *args, **kwargs):
-#         user_info = request.oidc.userinfo()
-#         email = user_info.get("email")
-
-#         user, created = User.objects.get_or_create(
-#             username=email, defaults={"email": email}
-#         )
-#         if created:
-#             print("success!")
-#         login(request, user)
-
-#         # Register the customer as a user
-#         customer, created = Customer.objects.get_or_create(
-#             code=email,
-#             defaults={
-#                 "name": user_info.get("name", f"{email.split('@')[0]}"),
-#                 "phone_number": "",
-#             },
-#         )
-#         print(customer.code)
-#         if created:
-#             return super().get(request, *args, **kwargs)
