@@ -1,8 +1,9 @@
 import dj_database_url
-from os import getenv
+
+from os import getenv, path
 from dotenv import load_dotenv
 from pathlib import Path
-
+from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
@@ -15,11 +16,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = getenv("DJANGO_SECRET_KEY", get_random_secret_key)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "t")
-DEBUG = True
+DEBUG = getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "t")
+
 ALLOWED_HOSTS = getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 
@@ -45,6 +46,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.login_middleware.LoginRequiredMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://dev-86479100.okta.com",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -74,6 +83,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
         default=getenv("DATABASE_URL"),
+        conn_max_age=600,
     ),
 }
 
@@ -113,6 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -124,7 +135,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 OKTA_DOMAIN = getenv("OKTA_DOMAIN")
 OIDC_RP_CLIENT_ID = getenv("OIDC_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = getenv("OIDC_CLIENT_SECRET")
-OIDC_OP_AUTHORIZATION_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/authorize"
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/authorize?idp=0oak12umviiR3AqZD5d7&client=GOOGLE_CLIENT_ID&response_type=code&response_mode=query&"
 OIDC_OP_USER_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/userinfo"
 OIDC_OP_TOKEN_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/token"
 OIDC_OP_JWKS_ENDPOINT = f"https://{OKTA_DOMAIN}/oauth2/default/v1/keys"
@@ -136,6 +147,16 @@ AUTHENTICATION_BACKENDS = (
     "core.backends.CustomOIDCAuthenticationBackend",
     "django.contrib.auth.backends.ModelBackend",
 )
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
 
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 60 * 60
 OIDC_STORE_ACCESS_TOKEN = getenv("OIDC_STORE_ACCESS_TOKEN", True)

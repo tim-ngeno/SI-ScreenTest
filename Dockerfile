@@ -12,6 +12,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy project files and install python dependencies
@@ -23,5 +24,8 @@ RUN pip install -r requirements.txt
 # Expose port 8000
 EXPOSE 8000
 
-# Run the Django server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+# Run the Django server after migrations and collectstatic
+CMD python manage.py makemigrations && \
+    python manage.py migrate && \
+    python manage.py collectstatic --noinput && \
+    gunicorn --bind 0.0.0.0:8000 core.wsgi:application

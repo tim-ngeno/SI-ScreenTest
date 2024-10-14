@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 from mozilla_django_oidc.views import OIDCAuthenticationRequestView
-from api.views import CustomOIDCCallback
+from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -11,6 +11,8 @@ urlpatterns = [
         OIDCAuthenticationRequestView.as_view(),
         name="oidc_login",
     ),
-    path("oidc/callback/", CustomOIDCCallback.as_view(), name="oidc_callback"),
+    path(
+        "oidc/callback/", OIDCAuthenticationCallbackView.as_view(), name="oidc_callback"
+    ),
     path("", include("api.urls")),
 ]
